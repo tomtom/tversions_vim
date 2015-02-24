@@ -1,0 +1,23 @@
+*tversions.txt*       Update the version number when saving a file
+                      Author: Tom Link, micathom at gmail com
+
+This plugin updates a version number according to |g:tversions#marker_rx| and 
+|g:tversions#number_rx| when saving a file.
+
+
+-----------------------------------------------------------------------
+Install~
+
+If you want to install the vba from vim.org, open the vba file in VIM (see 
+`:help vimball` for details) and type: >
+
+    :so %%
+
+If you want to install from git, clone http://github.com/tomtom/tversions_vim/
+to ~/.vim/bundle/tversions_vim: >
+
+    cd ~/.vim/bundle
+    git clone https://github.com/tomtom/tversions_vim.git
+
+
+%s
