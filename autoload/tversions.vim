@@ -1,28 +1,50 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2008-09-19.
-" @Revision:    9
+" @Last Change: 2015-02-25.
+" @Revision:    17
 
-if !exists('g:tversions#marker_rx')
-    let g:tversions#marker_rx = '@Revision:\s\+'   "{{{2
+
+if !exists('g:tversions#defs')
+    " :read: let g:tversions#defs = {...}   "{{{2
+    " Can be extended by |g:tversions|.
+    " Can be buffer-local as b:tversions.
+    let g:tversions#defs = {
+                \ 'last change': {
+                \   'marker_rx': '@Last Change:\s\+\zs\d\+-\d\+-\d\+',
+                \   'group_idx': -1,
+                \   'inc': 'strftime("%Y-%m-%d")',
+                \   },
+                \ 'rev': {
+                \   'marker_rx': '@Revision:\s\+\(RC\d*\|pre\d*\|p\d\+\|-\?\d\+\)\.\zs-\?\d\+',
+                \   'inc': '%s + 1',
+                \   },
+                \ }
 endif
 
-if !exists('g:tversions#number_rx')
-    let g:tversions#number_rx = '\(RC\d*\|pre\d*\|p\d\+\|-\?\d\+\)\.'   "{{{2
-endif
 
-if !exists('g:tversions#group_idx')
-    let g:tversions#group_idx = 3   "{{{2
+if exists('g:tversions')
+    let g:tversions#defs = extend(g:tversions#defs, g:tversions)
 endif
 
 
 function! tversions#IncreaseVersionNumber() "{{{3
-    let rev = exists("b:tversions_marker_rx") ? b:tversions_marker_rx : g:tversions#marker_rx
-    let ver = exists("b:tversions_number_rx")  ? b:tversions_number_rx : g:tversions#number_rx
+    if exists('b:tversions')
+        let defs = b:tversions
+    else
+        let defs = g:tversions#defs
+    endif
     let pos = getpos('.')
     let rs  = @/
     try
-        silent exec '%s/'.rev.'\('.ver.'\)*\zs\(-\?\d\+\)/\=(submatch(g:tversions#group_idx) + 1)/e'
+        for def in values(defs)
+            let group_idx = get(def, 'group_idx', 0)
+            if group_idx >= 0
+                let inc = printf(def.inc, 'submatch('. group_idx .')')
+            else
+                let inc = def.inc
+            endif
+            silent exec '%s/'. def.marker_rx .'/\='. inc .'/e'
+        endfor
     finally
         let @/ = rs
         call setpos('.', pos)
