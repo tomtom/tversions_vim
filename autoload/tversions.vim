@@ -1,7 +1,7 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-02-25.
-" @Revision:    17
+" @Last Change: 2015-09-04.
+" @Revision:    18
 
 
 if !exists('g:tversions#defs')
@@ -10,12 +10,12 @@ if !exists('g:tversions#defs')
     " Can be buffer-local as b:tversions.
     let g:tversions#defs = {
                 \ 'last change': {
-                \   'marker_rx': '@Last Change:\s\+\zs\d\+-\d\+-\d\+',
+                \   'marker_rx': '@Last Change:\s*\zs\d\+-\d\+-\d\+',
                 \   'group_idx': -1,
                 \   'inc': 'strftime("%Y-%m-%d")',
                 \   },
                 \ 'rev': {
-                \   'marker_rx': '@Revision:\s\+\(RC\d*\|pre\d*\|p\d\+\|-\?\d\+\)\.\zs-\?\d\+',
+                \   'marker_rx': '@Revision:\s*[^1-9-]\{-}\zs-\?\d\+',
                 \   'inc': '%s + 1',
                 \   },
                 \ }
